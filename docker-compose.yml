@@ -1,0 +1,43 @@
+version:                "3"
+services:
+
+    author:
+        build:
+            context:    .
+            dockerfile: aem/Dockerfile
+        image:          arkki/aem:6.2-alpine
+        ports:
+            -           "4502:4502"
+            -           "8000:8000"
+        volumes:
+            -           ./docker-data/author:/opt/aem/crx-quickstart
+        environment:
+            - TZ
+            - CQ_FOREGROUND=y
+            - CQ_VERBOSE=y
+            - CQ_NOBROWSER=y
+            - CQ_RUNMODE=author,nosamplecontent
+            - CQ_JVM_OPTS=-server -Xmx4096m -Xms4096m -Djava.awt.headless=true -agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n
+            
+        tty: true
+        
+    publish:
+        build:
+            context:    .
+            dockerfile: aem/Dockerfile
+        image:          arkki/aem:6.2-alpine
+        ports:
+            -           "4503:4503"
+        volumes:
+            -           ./docker-data/publish/:/opt/aem/crx-quickstart
+        depends_on:
+            -           author
+        environment:
+            - TZ
+            - CQ_FOREGROUND=y
+            - CQ_VERBOSE=y
+            - CQ_NOBROWSER=y
+            - CQ_RUNMODE=publish,nosamplecontent
+            - CQ_JVM_OPTS=-server -Xmx4096m -Xms4096m
+            
+        tty: true
