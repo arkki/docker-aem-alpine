@@ -1,18 +1,17 @@
 # Dockerized AEM setup using Alpine linux
 
 Lets you run AEM author, publish and dispatcher in separate containers.
-Everything gets linked together with Docker compose.
-The magic is happening in docker-compose.yml file.
+Everything gets linked together with Docker Compose and configured in **docker-compose.yml**.
 
 ## Prerequisites
 
-There's a few prerequisites that must be met before this can be built.
+There are few prerequisites that must be met before building and running.
 
 ### Docker
 
 You must have Docker installed before you can run this.
-Check [Installation instructions](https://docs.docker.com/engine/installation).
-For Docker compose, check [instructions](https://docs.docker.com/compose/install/).
+Check Docker [instructions](https://docs.docker.com/engine/installation).
+For Docker Compose, check [instructions](https://docs.docker.com/compose/install/).
 
 ### AEM files
 
@@ -52,7 +51,7 @@ If you wish to start everything clean (*will remove all changes done in AEM*), r
 
 ~~~
 docker-compose down
-rm -rf docker-data
+rm -r docker-data
 ~~~
 
 ## After everything is up and running
@@ -60,10 +59,7 @@ rm -rf docker-data
 You should change replication settings to match the environment.
 
 [Default Agent (publish)](http://localhost:4502/etc/replication/agents.author/publish.html)
-Change localhost to aem-publish.
-
-[Reverse Replication Agent (publish_reverse)](http://localhost:4502/etc/replication/agents.author/publish_reverse.html)
-Change localhost to aem-publish.
+Change localhost to publish:4503.
 
 ## Starting up dispatcher
 
@@ -85,19 +81,22 @@ accessible.
 Handy command for attaching a terminal to a running docker container, use:
 
 ~~~
-docker-compose exec <container_name> /bin/bash
+docker-compose exec <service> /bin/bash
 ~~~
 
 Or if you prefer fish (pre-installed in container):
 
 ~~~
-docker-compose exec <container_name> /usr/bin/fish
+docker-compose exec <service> /usr/bin/fish
 ~~~
 
 ### Manually building images
 
-Copy aem-quickstart.jar and license.properties files to project root with exactly these names.
+Remember to copy aem-quickstart.jar and license.properties files to project root with exactly these names before building.
+To build a specific image, you can use for example:
 
 ~~~
-docker build --no-cache -f <image>/Dockerfile -t arkki/<image>:<AEM version>- .
+docker build --no-cache -f aem/Dockerfile -t arkki/aem:6.2-alpine .
 ~~~
+
+Enjoy!
